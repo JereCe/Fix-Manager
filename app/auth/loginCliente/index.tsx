@@ -42,7 +42,7 @@ const LoginScreen = () => {
     setIsPosting(false);
 
     if (wasSuccessful) {
-      router.replace("/(fix-manager)/(home-cliente)");
+      router.replace("/(tabs-cliente)/(fix-manager)/(home-cliente)");
       return;
     }
 
