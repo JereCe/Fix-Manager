@@ -1,7 +1,7 @@
 import { authCheckStatus, authLogin } from "@/core/auth/actions/auth-actions";
 import { UserCliente } from "@/core/auth/interface/userCliente";
 
-//import { SecureStorageAdapter } from "@/helpers/adapters/secure-storage.adapter";
+import { SecureStorageAdapter } from "@/helpers/adapters/secure-storage.adapter";
 
 import { create } from "zustand";
 
@@ -26,9 +26,8 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
   changeStatus: async (token?: string, user?: UserCliente) => {
     if (!token || !user) {
       set({ status: "unauthenticated", token: undefined, user: undefined });
-      // await SecureStorageAdapter.deleteItem("token");
+      await SecureStorageAdapter.deleteItem("token");
 
-      //TODO: llamar al logout
       return false;
     }
 
@@ -38,7 +37,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
       user: user,
     });
 
-    //  await SecureStorageAdapter.setItem("token", token);
+    await SecureStorageAdapter.setItem("token", token);
 
     return true;
   },
@@ -53,12 +52,9 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
     const resp = await authCheckStatus();
 
     get().changeStatus(resp?.token, resp?.user);
-
-    //TODO: guardar el token en el secure storage
   },
   logout: async () => {
-    //TODO: clear del token en el secure storage
-    //  SecureStorageAdapter.deleteItem("token");
+    SecureStorageAdapter.deleteItem("token");
     set({ status: "unauthenticated", token: undefined, user: undefined });
   },
 }));

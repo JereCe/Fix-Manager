@@ -4,15 +4,9 @@ import { ThemedText } from "@/presentation/theme/components/ThemedText";
 import ThemedTextInput from "@/presentation/theme/components/ThemedTextInput";
 import { useThemeColor } from "@/presentation/theme/hooks/useThemeColor";
 import React from "react";
-import {
-  KeyboardAvoidingView,
-  ScrollView,
-  useWindowDimensions,
-  View,
-} from "react-native";
+import { KeyboardAvoidingView, ScrollView, View, Image } from "react-native";
 
 const RegisterClienteScreen = () => {
-  const { height } = useWindowDimensions();
   const backgroundColor = useThemeColor({}, "background");
 
   return (
@@ -23,24 +17,46 @@ const RegisterClienteScreen = () => {
           backgroundColor: backgroundColor,
         }}
       >
+        <View style={{ alignItems: "center", paddingTop: 50 }}>
+          <Image
+            source={require("@/assets/images/logo.png")}
+            style={{
+              width: 152,
+              height: 126,
+            }}
+          />
+        </View>
         <View
           style={{
-            paddingTop: height * 0.35,
+            marginTop: 60,
           }}
         >
-          <ThemedText type="title">Crear cuenta</ThemedText>
-          <ThemedText style={{ color: "grey" }}>
+          <ThemedText type="title" style={{ color: "#A5AAB1" }}>
+            Crear cuenta
+          </ThemedText>
+          <ThemedText style={{ color: "#A5AAB1" }}>
             Por favor crea una cuneta para continuar
           </ThemedText>
         </View>
 
         <View style={{ marginTop: 20 }}>
           <ThemedTextInput
-            placeholder="Nombre completo"
+            placeholder="Nombre"
             autoCapitalize="words"
             icon="person-outline"
           />
 
+          <ThemedTextInput
+            placeholder="Apellido"
+            autoCapitalize="words"
+            icon="mail-outline"
+          />
+          <ThemedTextInput
+            placeholder="Documento"
+            keyboardType="email-address"
+            autoCapitalize="none"
+            icon="mail-outline"
+          />
           <ThemedTextInput
             placeholder="Correo electronico"
             keyboardType="email-address"
@@ -73,7 +89,9 @@ const RegisterClienteScreen = () => {
               alignContent: "center",
             }}
           >
-            <ThemedText>¿Ya tienes cuenta?</ThemedText>
+            <ThemedText style={{ color: "#A5AAB1" }}>
+              ¿Ya tienes cuenta?
+            </ThemedText>
 
             <ThemedLink
               href="/auth/loginCliente"

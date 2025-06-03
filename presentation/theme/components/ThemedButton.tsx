@@ -9,7 +9,7 @@ interface Props extends PressableProps {
 }
 
 const ThemedButton = ({ children, icon, ...rest }: Props) => {
-  const primaryColor = useThemeColor({}, "primary");
+  const primaryColor = useThemeColor({}, "buttonColor");
   const [isPressed, setIsPressed] = useState(false);
   return (
     <Pressable

@@ -3,6 +3,7 @@ import React, { useEffect } from "react";
 import { useAuthStore } from "@/presentation/auth/store/useAuthStore";
 import { Redirect, Stack } from "expo-router";
 import { useThemeColor } from "@/presentation/theme/hooks/useThemeColor";
+import LogoutButton from "@/presentation/auth/components/LogoutButton";
 
 const CheckAuthenticationLayout = () => {
   const { status, checkStatus } = useAuthStore();
@@ -50,7 +51,7 @@ const CheckAuthenticationLayout = () => {
         name="(home-cliente)/index"
         options={{
           title: "Productos",
-          headerLeft: () => <Text>sdasd</Text>,
+          headerLeft: () => <LogoutButton />,
         }}
       />
     </Stack>

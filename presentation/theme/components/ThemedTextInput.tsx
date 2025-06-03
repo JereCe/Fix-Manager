@@ -9,7 +9,7 @@ interface Props extends TextInputProps {
 
 const ThemedTextInput = ({ icon, ...rest }: Props) => {
   const primaryColor = useThemeColor({}, "primary");
-  const textColor = useThemeColor({}, "text");
+  const textColor = useThemeColor({}, "textColor");
 
   const [isActive, setIsActive] = useState(false);
 
@@ -20,6 +20,8 @@ const ThemedTextInput = ({ icon, ...rest }: Props) => {
       style={{
         ...styles.border,
         borderColor: isActive ? primaryColor : "#CCC",
+        backgroundColor: useThemeColor({}, "textInputBG"),
+        marginBottom: 15,
       }}
       onTouchStart={() => inputRef.current?.focus()}
     >
@@ -35,7 +37,7 @@ const ThemedTextInput = ({ icon, ...rest }: Props) => {
       )}
       <TextInput
         ref={inputRef}
-        placeholderTextColor="#5C5C5C"
+        placeholderTextColor={textColor}
         onFocus={() => setIsActive(true)}
         onBlur={() => setIsActive(false)}
         style={{

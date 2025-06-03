@@ -10,12 +10,11 @@ import {
   Alert,
   KeyboardAvoidingView,
   ScrollView,
-  useWindowDimensions,
   View,
+  Image,
 } from "react-native";
 
 const LoginScreen = () => {
-  const { height } = useWindowDimensions();
   const backgroundColor = useThemeColor({}, "background");
 
   const [isPosting, setIsPosting] = useState(false);
@@ -58,13 +57,24 @@ const LoginScreen = () => {
           backgroundColor: backgroundColor,
         }}
       >
+        <View style={{ alignItems: "center", paddingTop: 70 }}>
+          <Image
+            source={require("@/assets/images/logo.png")}
+            style={{
+              width: 186,
+              height: 159,
+            }}
+          />
+        </View>
         <View
           style={{
-            paddingTop: height * 0.35,
+            marginTop: 80,
           }}
         >
-          <ThemedText type="title">Ingresar</ThemedText>
-          <ThemedText style={{ color: "grey" }}>
+          <ThemedText type="title" style={{ color: "#A5AAB1" }}>
+            Ingresar
+          </ThemedText>
+          <ThemedText style={{ color: "#A5AAB1" }}>
             Por favor ingrese para continuar
           </ThemedText>
         </View>
@@ -113,7 +123,9 @@ const LoginScreen = () => {
               alignContent: "center",
             }}
           >
-            <ThemedText>¿No tienes cuenta?</ThemedText>
+            <ThemedText style={{ color: "#A5AAB1" }}>
+              ¿No tienes cuenta?
+            </ThemedText>
 
             <ThemedLink
               href="/auth/registerCliente"
