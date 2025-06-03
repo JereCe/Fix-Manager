@@ -9,7 +9,7 @@ interface Props {
 }
 
 export default function MainActionButton({ icon, label, onPress }: Props) {
-  const backgroundColor = useThemeColor({}, "background");
+  const backgroundColor = useThemeColor({}, "textInputBG");
   return (
     <Pressable
       onPress={onPress}

@@ -8,10 +8,11 @@ import { useAuthStore } from "@/presentation/auth/store/useAuthStore";
 
 export default function TabsLayout() {
   const { status, checkStatus } = useAuthStore();
-  const backgroundColor = useThemeColor({}, "background");
+  const backgroundColor = useThemeColor({}, "cardBackground");
 
   useEffect(() => {
     checkStatus();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   console.log(status);
@@ -72,6 +73,7 @@ export default function TabsLayout() {
           ),
         }}
       />
+      <Tabs.Screen name="(fix-manager)/vehiculos" options={{ href: null }} />
     </Tabs>
   );
 }

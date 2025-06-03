@@ -4,13 +4,13 @@ import { useThemeColor } from "@/presentation/theme/hooks/useThemeColor";
 import MainActionButton from "@/presentation/theme/components/MainActionButton";
 
 export default function HomeClienteScreen() {
-  const backgroundColor = useThemeColor({}, "BackgroundBtn");
+  const backgroundColor = useThemeColor({}, "background");
 
   return (
     <View
       style={{
         flex: 1,
-        backgroundColor,
+        backgroundColor: backgroundColor,
         alignItems: "center",
         paddingTop: 60,
       }}

@@ -21,6 +21,7 @@ export const useVehiculos = () => {
 
   useEffect(() => {
     if (userId) cargarVehiculos();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId]);
 
   return {

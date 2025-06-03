@@ -9,28 +9,29 @@ const tintColorDark = "#fff";
 export const Colors = {
   light: {
     text: "#11181C",
-    background: "#0a0f15",
+
     tint: tintColorLight,
     icon: "#687076",
     tabIconDefault: "#687076",
     tabIconSelected: tintColorLight,
-    primary: "#3D64F4",
-    textInputBG: "#242D35",
-    buttonColor: "#759aad",
+    background: "#121E28", // Fondo general
+    cardBackground: "#1F2E3C", // Cuadros o tarjetas
+    textInputBG: "#1F2E3C", // Fondos de inputs
+    buttonColor: "#759AAD", // Color del botón principal
     textColor: "#A5AAB1",
-    BackgroundBtn: "#0F1B26",
+    primary: "#3D64F4",
   },
   dark: {
     text: "#ECEDEE",
-    background: "#0a0f15",
     tint: tintColorDark,
     icon: "#9BA1A6",
     tabIconDefault: "#9BA1A6",
     tabIconSelected: tintColorDark,
-    primary: "#3D64F4",
-    buttonColor: "#759aad",
-    textInputBG: "#242D35",
+    background: "#121E28", // Fondo general
+    cardBackground: "#1F2E3C", // Cuadros o tarjetas
+    textInputBG: "#1F2E3C", // Fondos de inputs
+    buttonColor: "#759AAD", // Color del botón principal
     textColor: "#A5AAB1",
-    BackgroundBtn: "#0F1B26",
+    primary: "#3D64F4",
   },
 };
