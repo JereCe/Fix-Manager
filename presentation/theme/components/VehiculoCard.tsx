@@ -9,6 +9,8 @@ interface Props {
   patente: string;
   anio: number;
   onEditar?: () => void;
+  onHistorial?: () => void;
+  onEliminar?: () => void;
 }
 
 export const VehiculoCard = ({
@@ -17,34 +19,85 @@ export const VehiculoCard = ({
   patente,
   anio,
   onEditar,
+  onHistorial,
+  onEliminar,
 }: Props) => {
-  const backgroudColor = useThemeColor({}, "cardBackground");
+  const backgroundColor = useThemeColor({}, "cardBackground");
+
   return (
     <View
       style={{
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-        backgroundColor: backgroudColor,
+        backgroundColor,
         borderColor: "#A5AAB1",
         borderWidth: 1,
-        borderRadius: 12,
-        padding: 16,
-        marginBottom: 12,
+        borderRadius: 10,
+        padding: 12,
+        marginBottom: 14,
       }}
     >
-      {/* Columna izquierda */}
-      <View style={{ flex: 1 }}>
-        <ThemedText type="subtitle" style={{ marginBottom: 4 }}>
-          {marca} {modelo} - {anio}
-        </ThemedText>
-        <ThemedText>Patente: {patente}</ThemedText>
+      {/* Parte superior: texto + ícono editar */}
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "flex-start",
+        }}
+      >
+        <View style={{ flex: 1, marginLeft: 8 }}>
+          <ThemedText style={{ marginBottom: 2, fontSize: 24, color: "white" }}>
+            {marca} {modelo}
+          </ThemedText>
+          <ThemedText style={{ marginBottom: 2, fontSize: 20, color: "white" }}>
+            {anio}
+          </ThemedText>
+          <ThemedText style={{ fontSize: 16, color: "white" }}>
+            {patente}
+          </ThemedText>
+        </View>
+
+        <TouchableOpacity onPress={onEditar}>
+          <Ionicons name="create-outline" size={24} color="#5CC6FF" />
+        </TouchableOpacity>
       </View>
 
-      {/* Columna derecha: icono */}
-      <TouchableOpacity onPress={onEditar} style={{ marginLeft: 12 }}>
-        <Ionicons name="create-outline" size={24} color="#5CC6FF" />
-      </TouchableOpacity>
+      {/* Botones icónicos */}
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+          marginTop: 14,
+        }}
+      >
+        <TouchableOpacity
+          onPress={onHistorial}
+          style={{
+            flex: 1,
+            marginRight: 8,
+            borderRadius: 8,
+            paddingVertical: 10,
+            alignItems: "center",
+            borderWidth: 1,
+            borderColor: "#9BA1A6",
+          }}
+        >
+          <Ionicons name="document-text-outline" size={26} color="#5CC6FF" />
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          onPress={onEliminar}
+          style={{
+            flex: 1,
+            marginLeft: 8,
+            borderRadius: 8,
+            paddingVertical: 10,
+            alignItems: "center",
+            borderWidth: 1,
+            borderColor: "#9BA1A6",
+          }}
+        >
+          <Ionicons name="trash-outline" size={26} color="#5CC6FF" />
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };

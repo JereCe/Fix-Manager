@@ -13,13 +13,13 @@ import {
   View,
   Image,
 } from "react-native";
+import { authLoginTaller } from "@/core/auth/actions/auth-actions"; // ✅
 
-const LoginScreen = () => {
+const LoginTallerScreen = () => {
   const backgroundColor = useThemeColor({}, "background");
-
   const [isPosting, setIsPosting] = useState(false);
 
-  const { login } = useAuthStore();
+  const { changeStatus } = useAuthStore(); // ✅ usamos changeStatus directamente
 
   const [form, setForm] = useState({
     email: "",
@@ -29,50 +29,35 @@ const LoginScreen = () => {
   const onLogin = async () => {
     const { email, password } = form;
 
-    console.log({ email, password });
-
-    if (email.length === 0 || password.length === 0) {
-      return;
-    }
+    if (!email || !password) return;
 
     setIsPosting(true);
 
-    const wasSuccessful = await login(email, password);
+    const resp = await authLoginTaller(email, password); // ✅ login de taller
 
     setIsPosting(false);
 
-    if (wasSuccessful) {
-      router.replace("/(tabs-cliente)/(fix-manager)/(home-cliente)");
-      return;
+    if (resp) {
+      await changeStatus(resp.token, resp.user);
+      router.replace("/(tabs-cliente)/(fix-manager)/(home-cliente)"); // ✅ ruta de taller
+    } else {
+      Alert.alert("Error", "Usuario o contraseña incorrecta");
     }
-
-    Alert.alert("error", "Usuario o contraseña incorrecta");
   };
 
   return (
     <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
-      <ScrollView
-        style={{
-          paddingHorizontal: 40,
-          backgroundColor: backgroundColor,
-        }}
-      >
+      <ScrollView style={{ paddingHorizontal: 40, backgroundColor }}>
         <View style={{ alignItems: "center", paddingTop: 70 }}>
           <Image
             source={require("@/assets/images/logo.png")}
-            style={{
-              width: 186,
-              height: 159,
-            }}
+            style={{ width: 186, height: 159 }}
           />
         </View>
-        <View
-          style={{
-            marginTop: 80,
-          }}
-        >
+
+        <View style={{ marginTop: 80 }}>
           <ThemedText type="title" style={{ color: "#A5AAB1" }}>
-            Ingresar
+            Ingresar como Taller
           </ThemedText>
           <ThemedText style={{ color: "#A5AAB1" }}>
             Por favor ingrese para continuar
@@ -81,7 +66,7 @@ const LoginScreen = () => {
 
         <View style={{ marginTop: 20 }}>
           <ThemedTextInput
-            placeholder="Correo electronico"
+            placeholder="Correo electrónico"
             keyboardType="email-address"
             autoCapitalize="none"
             icon="mail-outline"
@@ -97,31 +82,18 @@ const LoginScreen = () => {
             value={form.password}
             onChangeText={(value) => setForm({ ...form, password: value })}
           />
-          <View
-            style={{
-              marginVertical: 10,
-            }}
-          />
+
+          <View style={{ marginVertical: 10 }} />
+
           <ThemedButton
             icon="arrow-forward-outline"
             onPress={onLogin}
             disabled={isPosting}
           >
-            ingresar
+            Ingresar
           </ThemedButton>
 
-          <ThemedButton
-            icon="arrow-forward-outline"
-            onPress={() => router.replace("/auth/loginTaller")}
-          >
-            Ingreso Taller
-          </ThemedButton>
-
-          <View
-            style={{
-              marginVertical: 40,
-            }}
-          />
+          <View style={{ marginVertical: 40 }} />
 
           <View
             style={{
@@ -135,10 +107,8 @@ const LoginScreen = () => {
             </ThemedText>
 
             <ThemedLink
-              href="/auth/registerCliente"
-              style={{
-                marginHorizontal: 5,
-              }}
+              href="/auth/registerTaller" // ✅ si tenés uno, si no cambialo
+              style={{ marginHorizontal: 5 }}
             >
               Crear cuenta
             </ThemedLink>
@@ -149,4 +119,4 @@ const LoginScreen = () => {
   );
 };
 
-export default LoginScreen;
+export default LoginTallerScreen;

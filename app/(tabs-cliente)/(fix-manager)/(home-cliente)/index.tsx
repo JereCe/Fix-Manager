@@ -2,9 +2,13 @@ import { View, Image } from "react-native";
 import { router } from "expo-router";
 import { useThemeColor } from "@/presentation/theme/hooks/useThemeColor";
 import MainActionButton from "@/presentation/theme/components/MainActionButton";
+import { useAuthStore } from "@/presentation/auth/store/useAuthStore";
 
-export default function HomeClienteScreen() {
+export default function HomeScreen() {
   const backgroundColor = useThemeColor({}, "background");
+  const { user } = useAuthStore();
+
+  const isTaller = user?.rol === "TALLER";
 
   return (
     <View
@@ -27,26 +31,47 @@ export default function HomeClienteScreen() {
           justifyContent: "center",
         }}
       >
-        <MainActionButton
-          icon="calendar-outline"
-          label="Nuevo turno"
-          //onPress={() => router.push("/nuevo-turno")}
-        />
-        <MainActionButton
-          icon="calendar-number-outline"
-          label="Mis turnos"
-          //onPress={() => router.push("/mis-turnos")}
-        />
-        <MainActionButton
-          icon="car-outline"
-          label="Mis Autos"
-          onPress={() => router.push("/(tabs-cliente)/(fix-manager)/vehiculos")}
-        />
-        <MainActionButton
-          icon="star-outline"
-          label="Favoritos"
-          //onPress={() => router.push("/favoritos")}
-        />
+        {/* Opciones para taller */}
+        {isTaller ? (
+          <>
+            <MainActionButton
+              icon="construct-outline"
+              label="Agenda"
+              //onPress={() => router.push("/(tabs-taller)/(fix-manager)/agenda")}
+            />
+            <MainActionButton
+              icon="clipboard-outline"
+              label="Turnos"
+              // onPress={() => router.push("/(tabs-taller)/(fix-manager)/turnos")}
+            />
+          </>
+        ) : (
+          <>
+            {/* Opciones para cliente */}
+            <MainActionButton
+              icon="calendar-outline"
+              label="Nuevo turno"
+              //onPress={() => router.push("/nuevo-turno")}
+            />
+            <MainActionButton
+              icon="calendar-number-outline"
+              label="Mis turnos"
+              //onPress={() => router.push("/mis-turnos")}
+            />
+            <MainActionButton
+              icon="car-outline"
+              label="Mis Autos"
+              onPress={() =>
+                router.push("/(tabs-cliente)/(fix-manager)/vehiculos")
+              }
+            />
+            <MainActionButton
+              icon="star-outline"
+              label="Favoritos"
+              //onPress={() => router.push("/favoritos")}
+            />
+          </>
+        )}
       </View>
     </View>
   );

@@ -10,4 +10,5 @@ export interface UserCliente {
   documento?: string;
   vehiculos?: Vehiculo[];
   turnos?: Turno[];
+  rol?: string;
 }
