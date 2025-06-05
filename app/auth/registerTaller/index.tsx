@@ -32,26 +32,9 @@ const RegisterTallerScreen = () => {
   const [isPosting, setIsPosting] = useState(false);
 
   const onRegister = async () => {
-    const {
-      nombre,
-      apellido,
-      email,
-      contrasenia,
-      nombreTaller,
-      ubicacion,
-      descripcion,
-      imagenLogo,
-    } = form;
+    const { nombre, apellido, email, contrasenia } = form;
 
-    if (
-      !nombre ||
-      !apellido ||
-      !email ||
-      !contrasenia ||
-      !nombreTaller ||
-      !ubicacion ||
-      !descripcion
-    ) {
+    if (!nombre || !apellido || !email || !contrasenia) {
       Alert.alert("Error", "Completa todos los campos obligatorios");
       return;
     }
@@ -63,12 +46,6 @@ const RegisterTallerScreen = () => {
         apellido,
         email,
         contrasenia,
-        taller: {
-          nombre: nombreTaller,
-          ubicacion,
-          descripcion,
-          imagenLogo,
-        },
       });
 
       Alert.alert("Éxito", "Cuenta de taller creada correctamente");

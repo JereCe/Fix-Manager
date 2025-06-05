@@ -82,6 +82,11 @@ export default function TabsLayout() {
         name="(fix-manager)/vehiculos/editar/[id]"
         options={{ href: null }}
       />
+      <Tabs.Screen name="(fix-manager)/taller/index" options={{ href: null }} />
+      <Tabs.Screen
+        name="(fix-manager)/taller/nuevoTaller"
+        options={{ href: null }}
+      />
     </Tabs>
   );
 }
