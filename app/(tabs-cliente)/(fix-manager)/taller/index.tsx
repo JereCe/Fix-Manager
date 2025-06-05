@@ -46,61 +46,71 @@ export default function TallerScreen() {
     );
   }
 
+  if (!taller) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundColor,
+        }}
+      >
+        <ThemedText>No se pudo cargar el taller</ThemedText>
+      </View>
+    );
+  }
+
   return (
     <>
       <Stack.Screen options={{ title: "Mi Taller" }} />
       <ScrollView style={{ flex: 1, padding: 20, backgroundColor }}>
-        {taller && (
+        <View
+          style={{
+            backgroundColor: "#1F2E3C",
+            padding: 16,
+            borderRadius: 16,
+            alignItems: "center",
+          }}
+        >
+          <ThemedText type="title" style={{ color: "white", marginBottom: 12 }}>
+            {taller.nombre?.toUpperCase() ?? "TALLER SIN NOMBRE"}
+          </ThemedText>
+          <Image
+            source={{ uri: taller.imagenLogo }}
+            style={{
+              width: "100%",
+              height: 180,
+              marginBottom: 12,
+              borderRadius: 12,
+            }}
+          />
+          <ThemedText style={{ color: "white", marginBottom: 8 }}>
+            {taller.descripcion}
+          </ThemedText>
+          <ThemedText
+            style={{ color: "white", fontWeight: "bold", marginBottom: 4 }}
+          >
+            Dirección
+          </ThemedText>
+          <ThemedText style={{ color: "white", marginBottom: 20 }}>
+            {taller.ubicacion}
+          </ThemedText>
+
           <View
             style={{
-              backgroundColor: "#1F2E3C",
-              padding: 16,
-              borderRadius: 16,
-              alignItems: "center",
+              flexDirection: "row",
+              flexWrap: "wrap",
+              justifyContent: "center",
+              gap: 12,
             }}
           >
-            <ThemedText
-              type="title"
-              style={{ color: "white", marginBottom: 12 }}
-            >
-              {taller.nombre.toUpperCase()}
-            </ThemedText>
-            <Image
-              source={{ uri: taller.imagenLogo }}
-              style={{
-                width: "100%",
-                height: 180,
-                marginBottom: 12,
-                borderRadius: 12,
-              }}
-            />
-            <ThemedText style={{ color: "white", marginBottom: 8 }}>
-              {taller.descripcion}
-            </ThemedText>
-            <ThemedText
-              style={{ color: "white", fontWeight: "bold", marginBottom: 4 }}
-            >
-              Dirección
-            </ThemedText>
-            <ThemedText style={{ color: "white", marginBottom: 20 }}>
-              {taller.ubicacion}
-            </ThemedText>
-
-            <View
-              style={{
-                flexDirection: "row",
-                flexWrap: "wrap",
-                justifyContent: "center",
-                gap: 12,
-              }}
-            >
-              <ThemedButton>Mi Agenda</ThemedButton>
-              <ThemedButton>Turnos</ThemedButton>
-              <ThemedButton>Cambiar Descripción</ThemedButton>
-              <ThemedButton>Mis servicios</ThemedButton>
-            </View>
+            <ThemedButton>Mi Agenda</ThemedButton>
+            <ThemedButton>Turnos</ThemedButton>
+            <ThemedButton>Cambiar Descripción</ThemedButton>
+            <ThemedButton>Mis servicios</ThemedButton>
           </View>
-        )}
+        </View>
       </ScrollView>
     </>
   );
