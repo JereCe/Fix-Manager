@@ -1,11 +1,14 @@
 import { useEffect, useState } from "react";
 import { View, ScrollView, Image, ActivityIndicator } from "react-native";
-import { Stack } from "expo-router";
+import { Stack, router } from "expo-router";
 import { ThemedText } from "@/presentation/theme/components/ThemedText";
-import ThemedButton from "@/presentation/theme/components/ThemedButton";
+
 import { fixManagerApi } from "@/core/auth/api/fixManagerApi";
 import { useAuthStore } from "@/presentation/auth/store/useAuthStore";
 import { useThemeColor } from "@/presentation/theme/hooks/useThemeColor";
+import { getBaseImageUrl } from "@/presentation/theme/hooks/getBaseImageUrl";
+
+import CustomButton from "@/presentation/theme/components/CustomButton";
 
 export default function TallerScreen() {
   const backgroundColor = useThemeColor({}, "background");
@@ -20,6 +23,7 @@ export default function TallerScreen() {
         const { data } = await fixManagerApi.get(
           `/talleres/${user?.id}/taller`
         );
+
         setTaller(data);
       } catch (error) {
         console.log("Error al cargar taller", error);
@@ -76,15 +80,14 @@ export default function TallerScreen() {
           <ThemedText type="title" style={{ color: "white", marginBottom: 12 }}>
             {taller.nombre?.toUpperCase() ?? "TALLER SIN NOMBRE"}
           </ThemedText>
+
           <Image
-            source={{ uri: taller.imagenLogo }}
-            style={{
-              width: "100%",
-              height: 180,
-              marginBottom: 12,
-              borderRadius: 12,
+            source={{
+              uri: `${getBaseImageUrl()}${taller.imagenLogo}`, // pegá una válida
             }}
+            style={{ width: 200, height: 100 }}
           />
+
           <ThemedText style={{ color: "white", marginBottom: 8 }}>
             {taller.descripcion}
           </ThemedText>
@@ -96,19 +99,23 @@ export default function TallerScreen() {
           <ThemedText style={{ color: "white", marginBottom: 20 }}>
             {taller.ubicacion}
           </ThemedText>
-
           <View
             style={{
               flexDirection: "row",
               flexWrap: "wrap",
-              justifyContent: "center",
-              gap: 12,
+              justifyContent: "space-between", // o "center"
+              gap: 8, // opcional, si usás margin en los botones
             }}
           >
-            <ThemedButton>Mi Agenda</ThemedButton>
-            <ThemedButton>Turnos</ThemedButton>
-            <ThemedButton>Cambiar Descripción</ThemedButton>
-            <ThemedButton>Mis servicios</ThemedButton>
+            <CustomButton label="Mi Agenda" onPress={() => {}} />
+            <CustomButton
+              label="Turnos"
+              onPress={() =>
+                router.push("/(tabs-cliente)/(fix-manager)/taller/crearTurno")
+              }
+            />
+            <CustomButton label="Editar Taller" onPress={() => {}} />
+            <CustomButton label="Mis servicios" onPress={() => {}} />
           </View>
         </View>
       </ScrollView>

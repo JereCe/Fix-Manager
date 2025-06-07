@@ -87,6 +87,17 @@ export default function TabsLayout() {
         name="(fix-manager)/taller/nuevoTaller"
         options={{ href: null }}
       />
+      <Tabs.Screen
+        name="(fix-manager)/taller/editar/[id]"
+        options={{ href: null }}
+      />
+
+      <Tabs.Screen
+        name="(fix-manager)/taller/crearTurno"
+        options={{ href: null }}
+      />
+
+      <Tabs.Screen name="editarUsuario" options={{ href: null }} />
     </Tabs>
   );
 }
