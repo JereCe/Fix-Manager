@@ -5,12 +5,12 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import { fixManagerApi } from "@/core/auth/api/fixManagerApi";
 import { useAuthStore } from "@/presentation/auth/store/useAuthStore";
 import { ThemedText } from "@/presentation/theme/components/ThemedText";
-import ThemedButton from "@/presentation/theme/components/ThemedButton";
 import { useThemeColor } from "@/presentation/theme/hooks/useThemeColor";
+import CustomSmallButton from "@/presentation/theme/components/CustomSmallButton";
 
 const CrearTurnoTallerScreen = () => {
   const backgroundColor = useThemeColor({}, "background");
-  const textColor = useThemeColor({}, "text");
+
   const { user } = useAuthStore();
 
   const [fecha, setFecha] = useState(new Date());
@@ -56,32 +56,60 @@ const CrearTurnoTallerScreen = () => {
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor, padding: 20 }}>
+    <View
+      style={{
+        flex: 1,
+        backgroundColor,
+        padding: 20,
+        paddingTop: 20,
+      }}
+    >
       <Stack.Screen options={{ title: "Crear Turno" }} />
-      <ThemedText type="title" style={{ marginBottom: 20, color: textColor }}>
-        Selecciona fecha y hora
-      </ThemedText>
 
-      <ThemedButton onPress={() => setMostrarFecha(true)}>
-        Seleccionar Fecha
-      </ThemedButton>
-      <ThemedButton onPress={() => setMostrarHora(true)}>
-        Seleccionar Hora
-      </ThemedButton>
+      <ThemedText
+        style={{ color: "white", textAlign: "center", marginBottom: 4 }}
+      >
+        Seleccione fecha
+      </ThemedText>
+      <View style={{ alignItems: "center", marginBottom: 20 }}>
+        <CustomSmallButton onPress={() => setMostrarFecha(true)}>
+          Fecha
+        </CustomSmallButton>
+      </View>
+
+      <ThemedText
+        style={{ color: "white", textAlign: "center", marginBottom: 4 }}
+      >
+        Seleccione hora
+      </ThemedText>
+      <View style={{ alignItems: "center", marginBottom: 20 }}>
+        <CustomSmallButton onPress={() => setMostrarHora(true)}>
+          Hora
+        </CustomSmallButton>
+      </View>
 
       {fechaSeleccionada && (
-        <ThemedText style={{ marginVertical: 10, color: "white" }}>
+        <ThemedText
+          style={{ marginVertical: 10, color: "white", textAlign: "center" }}
+        >
           Fecha seleccionada: {fecha.toLocaleDateString()}
         </ThemedText>
       )}
       {horaSeleccionada && (
-        <ThemedText style={{ marginBottom: 20, color: "white" }}>
+        <ThemedText
+          style={{ marginBottom: 40, color: "white", textAlign: "center" }}
+        >
           Hora seleccionada:{" "}
           {fecha.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
         </ThemedText>
       )}
 
-      <ThemedButton onPress={crearTurno}>Crear Turno</ThemedButton>
+      <View style={{ flexDirection: "row", justifyContent: "center", gap: 12 }}>
+        <CustomSmallButton onPress={crearTurno}>Crear Turno</CustomSmallButton>
+        <CustomSmallButton onPress={() => router.back()}>
+          Cancelar
+        </CustomSmallButton>
+      </View>
 
       {mostrarFecha && (
         <DateTimePicker
