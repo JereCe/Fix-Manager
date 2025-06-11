@@ -98,6 +98,21 @@ export default function TabsLayout() {
       />
 
       <Tabs.Screen name="editarUsuario" options={{ href: null }} />
+
+      <Tabs.Screen
+        name="(fix-manager)/taller/misTurnos"
+        options={{ href: null }}
+      />
+
+      <Tabs.Screen
+        name="(fix-manager)/taller/reservarTurno"
+        options={{ href: null }}
+      />
+
+      <Tabs.Screen
+        name="(fix-manager)/taller/ListarTalleresScreen"
+        options={{ href: null }}
+      />
     </Tabs>
   );
 }

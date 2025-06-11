@@ -71,12 +71,18 @@ export default function HomeScreen() {
             <MainActionButton
               icon="calendar-outline"
               label="Nuevo turno"
-              //onPress={() => router.push("/nuevo-turno")}
+              onPress={() =>
+                router.push(
+                  "/(tabs-cliente)/(fix-manager)/taller/ListarTalleresScreen"
+                )
+              }
             />
             <MainActionButton
               icon="calendar-number-outline"
               label="Mis turnos"
-              //onPress={() => router.push("/mis-turnos")}
+              onPress={() =>
+                router.push("/(tabs-cliente)/(fix-manager)/taller/misTurnos")
+              }
             />
             <MainActionButton
               icon="car-outline"
@@ -86,9 +92,13 @@ export default function HomeScreen() {
               }
             />
             <MainActionButton
-              icon="star-outline"
+              icon="heart-outline"
               label="Favoritos"
-              //onPress={() => router.push("/favoritos")}
+              onPress={() =>
+                router.push(
+                  "/(tabs-cliente)/(fix-manager)/taller/ListarFavoritosScreen"
+                )
+              }
             />
           </>
         )}
