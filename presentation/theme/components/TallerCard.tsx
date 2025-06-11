@@ -17,9 +17,11 @@ import { useAuthStore } from "@/presentation/auth/store/useAuthStore";
 export const TallerCard = ({
   taller,
   baseUrl,
+  onToggleFavorito,
 }: {
   taller: Taller;
   baseUrl: string;
+  onToggleFavorito?: () => void;
 }) => {
   const router = useRouter();
   const { user } = useAuthStore();
@@ -62,6 +64,7 @@ export const TallerCard = ({
           `/clientes/${user?.id}/favoritos/${taller.id}`
         );
         setEsFavorito(false);
+        onToggleFavorito?.();
       } else {
         await fixManagerApi.put(`/clientes/${user?.id}/favoritos/${taller.id}`);
         setEsFavorito(true);
@@ -85,15 +88,14 @@ export const TallerCard = ({
           : "Sin calificación"}
       </Text>
 
-      {/* Nombre + Corazón */}
       <View style={styles.nombreYFavorito}>
         <Text style={styles.nombre}>{taller.nombre}</Text>
         <TouchableOpacity onPress={toggleFavorito}>
           <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
             <Ionicons
-              name={esFavorito ? "heart" : "heart-outline"}
+              name={esFavorito ? "star" : "star-outline"}
               size={20}
-              color={esFavorito ? "red" : "white"}
+              color={esFavorito ? "yellow" : "white"}
             />
           </Animated.View>
         </TouchableOpacity>

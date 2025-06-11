@@ -107,7 +107,14 @@ export default function TallerScreen() {
               gap: 8, // opcional, si usás margin en los botones
             }}
           >
-            <CustomButton label="Mi Agenda" onPress={() => {}} />
+            <CustomButton
+              label="Mi Agenda"
+              onPress={() =>
+                router.push(
+                  "/(tabs-cliente)/(fix-manager)/taller/TurnosPendientesScreen"
+                )
+              }
+            />
             <CustomButton
               label="Turnos"
               onPress={() =>

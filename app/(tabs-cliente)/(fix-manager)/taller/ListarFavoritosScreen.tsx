@@ -23,21 +23,23 @@ export default function ListarFavoritosScreen() {
   const backgroundColor = useThemeColor({}, "background");
   const { user } = useAuthStore();
 
-  useEffect(() => {
-    const fetchFavoritos = async () => {
-      try {
-        const { data } = await fixManagerApi.get(
-          `/clientes/${user?.id}/favoritos`
-        );
-        setTalleres(data);
-      } catch (e) {
-        console.error("Error cargando favoritos:", e);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const fetchFavoritos = async () => {
+    try {
+      const { data } = await fixManagerApi.get(
+        `/clientes/${user?.id}/favoritos`
+      );
+      setTalleres(data);
+    } catch (e) {
+      console.error("Error cargando favoritos:", e);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchFavoritos();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user?.id]);
 
   const ordenarTalleres = () => {
@@ -93,14 +95,24 @@ export default function ListarFavoritosScreen() {
         </TouchableOpacity>
       </View>
 
-      <FlatList
-        data={ordenarTalleres()}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => (
-          <TallerCard taller={item} baseUrl={baseUrl} />
-        )}
-        contentContainerStyle={{ paddingBottom: 20 }}
-      />
+      {talleres.length === 0 ? (
+        <Text style={{ color: "white", textAlign: "center", marginTop: 20 }}>
+          No tenés talleres favoritos aún.
+        </Text>
+      ) : (
+        <FlatList
+          data={ordenarTalleres()}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={({ item }) => (
+            <TallerCard
+              taller={item}
+              baseUrl={baseUrl}
+              onToggleFavorito={fetchFavoritos}
+            />
+          )}
+          contentContainerStyle={{ paddingBottom: 20 }}
+        />
+      )}
     </View>
   );
 }
