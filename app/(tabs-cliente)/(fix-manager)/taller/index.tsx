@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useFocusEffect } from "@react-navigation/native";
+import { useCallback, useState } from "react";
 import { View, ScrollView, Image, ActivityIndicator } from "react-native";
 import { Stack, router } from "expo-router";
 import { ThemedText } from "@/presentation/theme/components/ThemedText";
@@ -13,27 +14,28 @@ import CustomButton from "@/presentation/theme/components/CustomButton";
 export default function TallerScreen() {
   const backgroundColor = useThemeColor({}, "background");
   const { user } = useAuthStore();
-
   const [taller, setTaller] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchTaller = async () => {
-      try {
-        const { data } = await fixManagerApi.get(
-          `/talleres/${user?.id}/taller`
-        );
+  useFocusEffect(
+    useCallback(() => {
+      const fetchTaller = async () => {
+        setLoading(true);
+        try {
+          const { data } = await fixManagerApi.get(
+            `/talleres/${user?.id}/taller`
+          );
+          setTaller(data);
+        } catch (error) {
+          console.log("Error al cargar taller", error);
+        } finally {
+          setLoading(false);
+        }
+      };
 
-        setTaller(data);
-      } catch (error) {
-        console.log("Error al cargar taller", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchTaller();
-  }, [user?.id]);
+      fetchTaller();
+    }, [user?.id])
+  );
 
   if (loading) {
     return (
@@ -83,7 +85,7 @@ export default function TallerScreen() {
 
           <Image
             source={{
-              uri: `${getBaseImageUrl()}${taller.imagenLogo}`, // pegá una válida
+              uri: `${getBaseImageUrl()}${taller.imagenLogo}`,
             }}
             style={{ width: 200, height: 100 }}
           />
@@ -103,8 +105,8 @@ export default function TallerScreen() {
             style={{
               flexDirection: "row",
               flexWrap: "wrap",
-              justifyContent: "space-between", // o "center"
-              gap: 8, // opcional, si usás margin en los botones
+              justifyContent: "space-between",
+              gap: 8,
             }}
           >
             <CustomButton
@@ -121,7 +123,14 @@ export default function TallerScreen() {
                 router.push("/(tabs-cliente)/(fix-manager)/taller/crearTurno")
               }
             />
-            <CustomButton label="Editar Taller" onPress={() => {}} />
+            <CustomButton
+              label="Editar Taller"
+              onPress={() =>
+                router.push(
+                  "/(tabs-cliente)/(fix-manager)/taller/editarTallerScreen"
+                )
+              }
+            />
             <CustomButton label="Mis servicios" onPress={() => {}} />
           </View>
         </View>

@@ -58,7 +58,7 @@ export default function HomeScreen() {
             <MainActionButton
               icon="construct-outline"
               label="Mis turnos"
-              //onPress={() => router.push("/(tabs-taller)/(fix-manager)/mis-turnos")}
+              onPress={() => router.push("/taller/turnosProximos")}
             />
             <MainActionButton
               icon="clipboard-outline"

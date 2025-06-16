@@ -2,6 +2,7 @@ import { View, TouchableOpacity, Alert } from "react-native";
 import { ThemedText } from "@/presentation/theme/components/ThemedText";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { fixManagerApi } from "@/core/auth/api/fixManagerApi";
+import { router } from "expo-router";
 
 interface TurnoPendienteTaller {
   id: number;
@@ -27,6 +28,7 @@ export const TurnoCardTaller = ({
       onCancel(turno.id);
     } catch (error) {
       console.error("Error al cancelar turno:", error);
+      Alert.alert("Error", "No se pudo cancelar el turno.");
     }
   };
 
@@ -35,10 +37,7 @@ export const TurnoCardTaller = ({
       "Cancelar turno",
       "¿Estás seguro de que querés cancelar este turno?",
       [
-        {
-          text: "No",
-          style: "cancel",
-        },
+        { text: "No", style: "cancel" },
         {
           text: "Sí, cancelar",
           style: "destructive",
@@ -46,6 +45,19 @@ export const TurnoCardTaller = ({
         },
       ]
     );
+  };
+
+  const irAFinalizarTurno = () => {
+    router.push({
+      pathname:
+        "/(tabs-cliente)/(fix-manager)/taller/finalizarTurno/finalizarTurno",
+      params: {
+        id: turno.id,
+        fecha: turno.fecha,
+        hora: turno.hora,
+        vehiculo: `${turno.vehiculoMarca} ${turno.vehiculoModelo} - ${turno.vehiculoPatente}`,
+      },
+    });
   };
 
   return (
@@ -57,7 +69,6 @@ export const TurnoCardTaller = ({
         marginBottom: 12,
       }}
     >
-      {/* Fecha + botón de cancelar */}
       <View
         style={{
           flexDirection: "row",
@@ -92,9 +103,8 @@ export const TurnoCardTaller = ({
         Patente: {turno.vehiculoPatente}
       </ThemedText>
 
-      {/* Botón Finalizar (solo visual por ahora) */}
       <TouchableOpacity
-        onPress={() => {}}
+        onPress={irAFinalizarTurno}
         style={{
           marginTop: 10,
           backgroundColor: "#5CC6FF",
