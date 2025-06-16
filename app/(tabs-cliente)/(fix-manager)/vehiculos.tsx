@@ -88,11 +88,18 @@ const VehiculosScreen = () => {
                 marca={item.marca}
                 modelo={item.modelo}
                 patente={item.patente}
-                anio={item.anio ? item.anio : 0}
+                anio={item.anio ?? 0}
                 onEditar={() =>
                   router.push({
                     pathname:
                       "/(tabs-cliente)/(fix-manager)/vehiculos/editar/[id]",
+                    params: { id: item.id.toString() },
+                  })
+                }
+                onHistorial={() =>
+                  router.push({
+                    pathname:
+                      "/(tabs-cliente)/(fix-manager)/vehiculos/historialVehiculoScreen",
                     params: { id: item.id.toString() },
                   })
                 }

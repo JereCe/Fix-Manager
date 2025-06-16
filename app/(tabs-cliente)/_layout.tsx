@@ -87,10 +87,6 @@ export default function TabsLayout() {
         name="(fix-manager)/taller/nuevoTaller"
         options={{ href: null }}
       />
-      <Tabs.Screen
-        name="(fix-manager)/taller/editar/[id]"
-        options={{ href: null }}
-      />
 
       <Tabs.Screen
         name="(fix-manager)/taller/crearTurno"
@@ -111,6 +107,41 @@ export default function TabsLayout() {
 
       <Tabs.Screen
         name="(fix-manager)/taller/ListarTalleresScreen"
+        options={{ href: null }}
+      />
+
+      <Tabs.Screen
+        name="(fix-manager)/taller/editarTallerScreen"
+        options={{ href: null }}
+      />
+
+      <Tabs.Screen
+        name="(fix-manager)/taller/finalizarTurno/finalizarTurno"
+        options={{ href: null }}
+      />
+
+      <Tabs.Screen
+        name="(fix-manager)/taller/turnosProximos"
+        options={{ href: null }}
+      />
+
+      <Tabs.Screen
+        name="(fix-manager)/taller/ListarFavoritosScreen"
+        options={{ href: null }}
+      />
+
+      <Tabs.Screen
+        name="(fix-manager)/taller/TurnosPendientesScreen"
+        options={{ href: null }}
+      />
+
+      <Tabs.Screen
+        name="(fix-manager)/vehiculos/historialVehiculoScreen"
+        options={{ href: null }}
+      />
+
+      <Tabs.Screen
+        name="(fix-manager)/turnos/detalle/[id]"
         options={{ href: null }}
       />
     </Tabs>
