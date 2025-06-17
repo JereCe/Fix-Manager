@@ -17,7 +17,6 @@ import { useAuthStore } from "@/presentation/auth/store/useAuthStore";
 const EditarClienteScreen = () => {
   const backgroundColor = useThemeColor({}, "background");
   const { user } = useAuthStore();
-
   const isTaller = user?.rol === "TALLER";
 
   const [form, setForm] = useState({
@@ -30,7 +29,6 @@ const EditarClienteScreen = () => {
 
   const [isPosting, setIsPosting] = useState(false);
 
-  // precargar los datos del usuario
   useEffect(() => {
     if (!user) return;
 
@@ -50,15 +48,43 @@ const EditarClienteScreen = () => {
       .catch(() => {
         Alert.alert("Error", "No se pudieron cargar los datos del usuario");
       });
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
+
+  const validateEmail = (email: string) => {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(email);
+  };
 
   const onUpdate = async () => {
     const { nombre, apellido, documento, email, contrasenia } = form;
 
-    if (!nombre || !apellido || (!isTaller && !documento) || !email) {
-      Alert.alert("Error", "Completa todos los campos");
+    if (!nombre.trim() || !apellido.trim() || !email.trim()) {
+      Alert.alert("Error", "Todos los campos son obligatorios");
+      return;
+    }
+
+    if (!validateEmail(email)) {
+      Alert.alert("Error", "El correo electrónico no es válido");
+      return;
+    }
+
+    if (!isTaller) {
+      if (!documento.trim()) {
+        Alert.alert("Error", "El documento es obligatorio");
+        return;
+      }
+      if (!/^\d{7,}$/.test(documento)) {
+        Alert.alert(
+          "Error",
+          "El documento debe tener al menos 7 dígitos numéricos"
+        );
+        return;
+      }
+    }
+
+    if (contrasenia && contrasenia.length < 6) {
+      Alert.alert("Error", "La contraseña debe tener al menos 6 caracteres");
       return;
     }
 
@@ -68,24 +94,15 @@ const EditarClienteScreen = () => {
       email,
     };
 
-    if (!isTaller) {
-      datosParaEnviar.documento = documento;
-    }
-
-    if (contrasenia && contrasenia.trim().length > 0) {
-      datosParaEnviar.contrasenia = contrasenia;
-    }
-
-    if (!user) {
-      Alert.alert("Error", "No se encontró el usuario");
-      return;
-    }
-    const endpoint = isTaller
-      ? `/talleres/editar/${user.id}`
-      : `/clientes/editar/${user.id}`;
+    if (!isTaller) datosParaEnviar.documento = documento;
+    if (contrasenia.trim()) datosParaEnviar.contrasenia = contrasenia;
 
     try {
       setIsPosting(true);
+
+      const endpoint = isTaller
+        ? `/talleres/editar/${user?.id}`
+        : `/clientes/editar/${user?.id}`;
 
       await fixManagerApi.put(endpoint, datosParaEnviar);
 
@@ -105,7 +122,7 @@ const EditarClienteScreen = () => {
       <ScrollView
         style={{
           paddingHorizontal: 40,
-          backgroundColor: backgroundColor,
+          backgroundColor,
         }}
       >
         <View style={{ alignItems: "center", paddingTop: 50 }}>

@@ -8,16 +8,15 @@ import { router } from "expo-router";
 import React, { useState } from "react";
 import {
   Alert,
-  ScrollView,
   View,
   Image,
-  Keyboard,
   TouchableWithoutFeedback,
+  Keyboard,
 } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
-const LoginScreen = () => {
+const LoginClienteScreen = () => {
   const backgroundColor = useThemeColor({}, "background");
-
   const [isPosting, setIsPosting] = useState(false);
   const { login } = useAuthStore();
 
@@ -26,10 +25,23 @@ const LoginScreen = () => {
     password: "",
   });
 
+  const validateEmail = (email: string) => {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(email);
+  };
+
   const onLogin = async () => {
     const { email, password } = form;
 
-    if (email.length === 0 || password.length === 0) return;
+    if (!email || !password) {
+      Alert.alert("Error", "Completa todos los campos.");
+      return;
+    }
+
+    if (!validateEmail(email)) {
+      Alert.alert("Error", "Correo electrónico inválido.");
+      return;
+    }
 
     setIsPosting(true);
     const wasSuccessful = await login(email, password);
@@ -37,99 +49,98 @@ const LoginScreen = () => {
 
     if (wasSuccessful) {
       router.replace("/(tabs-cliente)/(fix-manager)/(home-cliente)");
-      return;
+    } else {
+      Alert.alert("Error", "Usuario o contraseña incorrecta");
     }
-
-    Alert.alert("Error", "Usuario o contraseña incorrecta");
   };
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <ScrollView
-        style={{ flex: 1, backgroundColor: backgroundColor }}
-        contentContainerStyle={{ flexGrow: 1 }}
+      <KeyboardAwareScrollView
+        style={{ flex: 1, backgroundColor }}
+        contentContainerStyle={{
+          paddingHorizontal: 40,
+          paddingTop: 40,
+          paddingBottom: 30,
+        }}
+        enableOnAndroid
         keyboardShouldPersistTaps="handled"
       >
-        <View
-          style={{ flex: 1, justifyContent: "center", paddingHorizontal: 40 }}
-        >
-          <View style={{ alignItems: "center", paddingTop: 70 }}>
-            <Image
-              source={require("@/assets/images/logo.png")}
-              style={{ width: 186, height: 159 }}
-            />
-          </View>
-
-          <View style={{ marginTop: 80 }}>
-            <ThemedText type="title" style={{ color: "#A5AAB1" }}>
-              Ingresar
-            </ThemedText>
-            <ThemedText style={{ color: "#A5AAB1" }}>
-              Por favor ingrese para continuar
-            </ThemedText>
-          </View>
-
-          <View style={{ marginTop: 20 }}>
-            <ThemedTextInput
-              placeholder="Correo electronico"
-              keyboardType="email-address"
-              autoCapitalize="none"
-              icon="mail-outline"
-              value={form.email}
-              onChangeText={(value) => setForm({ ...form, email: value })}
-            />
-
-            <ThemedTextInput
-              placeholder="Contraseña"
-              secureTextEntry
-              autoCapitalize="none"
-              icon="lock-closed-outline"
-              value={form.password}
-              onChangeText={(value) => setForm({ ...form, password: value })}
-            />
-
-            <View style={{ marginVertical: 10 }} />
-
-            <ThemedButton
-              icon="arrow-forward-outline"
-              onPress={onLogin}
-              disabled={isPosting}
-            >
-              ingresar
-            </ThemedButton>
-
-            <ThemedButton
-              icon="arrow-forward-outline"
-              onPress={() => router.replace("/auth/loginTaller")}
-            >
-              Ingreso Taller
-            </ThemedButton>
-
-            <View style={{ marginVertical: 40 }} />
-
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "center",
-                alignContent: "center",
-              }}
-            >
-              <ThemedText style={{ color: "#A5AAB1" }}>
-                ¿No tienes cuenta?
-              </ThemedText>
-
-              <ThemedLink
-                href="/auth/registerCliente"
-                style={{ marginHorizontal: 5 }}
-              >
-                Crear cuenta
-              </ThemedLink>
-            </View>
-          </View>
+        <View style={{ alignItems: "center", marginBottom: 30, marginTop: 50 }}>
+          <Image
+            source={require("@/assets/images/logo.png")}
+            style={{ width: 186, height: 159 }}
+          />
         </View>
-      </ScrollView>
+
+        <ThemedText
+          type="title"
+          style={{ color: "#A5AAB1", marginBottom: 4, marginTop: 60 }}
+        >
+          Ingresar
+        </ThemedText>
+        <ThemedText style={{ color: "#A5AAB1", marginBottom: 20 }}>
+          Por favor ingrese para continuar
+        </ThemedText>
+
+        <ThemedTextInput
+          placeholder="Correo electrónico"
+          keyboardType="email-address"
+          autoCapitalize="none"
+          icon="mail-outline"
+          value={form.email}
+          onChangeText={(value) => setForm({ ...form, email: value })}
+        />
+
+        <ThemedTextInput
+          placeholder="Contraseña"
+          secureTextEntry
+          autoCapitalize="none"
+          icon="lock-closed-outline"
+          value={form.password}
+          onChangeText={(value) => setForm({ ...form, password: value })}
+        />
+
+        <View style={{ marginTop: 20 }}>
+          <ThemedButton
+            icon="arrow-forward-outline"
+            onPress={onLogin}
+            disabled={isPosting}
+          >
+            Ingresar
+          </ThemedButton>
+        </View>
+
+        <View style={{ alignItems: "center", marginTop: 20 }}>
+          <ThemedLink
+            href="/auth/loginTaller"
+            style={{ color: "#5CC6FF", marginTop: 10 }}
+          >
+            ¿Sos un taller? Ingresar aquí
+          </ThemedLink>
+        </View>
+
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "center",
+            marginTop: 30,
+          }}
+        >
+          <ThemedText style={{ color: "#A5AAB1" }}>
+            ¿No tienes cuenta?
+          </ThemedText>
+
+          <ThemedLink
+            href="/auth/registerCliente"
+            style={{ marginHorizontal: 5 }}
+          >
+            Crear cuenta
+          </ThemedLink>
+        </View>
+      </KeyboardAwareScrollView>
     </TouchableWithoutFeedback>
   );
 };
 
-export default LoginScreen;
+export default LoginClienteScreen;

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { View, Alert } from "react-native";
+import { View, Alert, TouchableWithoutFeedback, Keyboard } from "react-native";
 import { Stack, useLocalSearchParams, router } from "expo-router";
 import { ThemedText } from "@/presentation/theme/components/ThemedText";
 import ThemedButton from "@/presentation/theme/components/ThemedButton";
@@ -7,6 +7,7 @@ import { fixManagerApi } from "@/core/auth/api/fixManagerApi";
 import { useAuthStore } from "@/presentation/auth/store/useAuthStore";
 import ThemedTextInput from "@/presentation/theme/components/ThemedTextInput";
 import { useThemeColor } from "@/presentation/theme/hooks/useThemeColor";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 const EditarVehiculoScreen = () => {
   const { id } = useLocalSearchParams<{ id?: string }>();
@@ -41,10 +42,22 @@ const EditarVehiculoScreen = () => {
   }, [id]);
 
   const onSave = async () => {
+    const { marca, modelo, patente, anio } = form;
+
+    if (!marca || !modelo || !patente || !anio) {
+      Alert.alert("Error", "Completa todos los campos");
+      return;
+    }
+
+    if (!/^[0-9]{4}$/.test(anio)) {
+      Alert.alert("Error", "El año debe ser un número de 4 dígitos");
+      return;
+    }
+
     try {
       await fixManagerApi.put(`/vehiculos/actualizar/${id}`, {
         ...form,
-        anio: Number(form.anio),
+        anio: Number(anio),
         usuarioId: user?.id,
       });
 
@@ -61,14 +74,20 @@ const EditarVehiculoScreen = () => {
   };
 
   return (
-    <>
-      <Stack.Screen options={{ title: "Editar Vehículo" }} />
-      <View style={{ padding: 20, backgroundColor, flex: 1 }}>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <KeyboardAwareScrollView
+        style={{ flex: 1, backgroundColor }}
+        contentContainerStyle={{ padding: 20 }}
+        enableOnAndroid
+        keyboardShouldPersistTaps="handled"
+      >
+        <Stack.Screen options={{ title: "Editar Vehículo" }} />
+
         <View
           style={{
             backgroundColor: inputBG,
             borderRadius: 12,
-            padding: 12,
+            padding: 16,
             marginBottom: 20,
             paddingBottom: 24,
           }}
@@ -127,8 +146,8 @@ const EditarVehiculoScreen = () => {
             <ThemedButton onPress={onCancel}>Cancelar</ThemedButton>
           </View>
         </View>
-      </View>
-    </>
+      </KeyboardAwareScrollView>
+    </TouchableWithoutFeedback>
   );
 };
 

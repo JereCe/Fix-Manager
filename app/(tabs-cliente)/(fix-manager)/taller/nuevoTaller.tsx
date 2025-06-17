@@ -46,18 +46,29 @@ export default function NuevoTallerScreen() {
   };
 
   const guardarTaller = async () => {
-    const formData = new FormData();
-    formData.append("nombre", form.nombre);
-    formData.append("descripcion", form.descripcion);
-    formData.append("ubicacion", form.ubicacion);
+    const { nombre, descripcion, ubicacion } = form;
 
-    if (imagen) {
-      formData.append("imagen", {
-        uri: imagen.uri,
-        name: imagen.name,
-        type: imagen.type,
-      } as any);
+    // Validaciones
+    if (!nombre || !descripcion || !ubicacion) {
+      Alert.alert("Error", "Por favor completa todos los campos");
+      return;
     }
+
+    if (!imagen) {
+      Alert.alert("Error", "Por favor selecciona una imagen");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("nombre", nombre);
+    formData.append("descripcion", descripcion);
+    formData.append("ubicacion", ubicacion);
+
+    formData.append("imagen", {
+      uri: imagen.uri,
+      name: imagen.name,
+      type: imagen.type,
+    } as any);
 
     try {
       await fixManagerApi.post(`/talleres/${user?.id}/crear-taller`, formData, {
@@ -65,6 +76,7 @@ export default function NuevoTallerScreen() {
           "Content-Type": "multipart/form-data",
         },
       });
+
       Alert.alert("Taller creado con éxito");
       router.replace("/(tabs-cliente)/(fix-manager)/taller");
     } catch (error) {
@@ -91,24 +103,41 @@ export default function NuevoTallerScreen() {
           Crear taller
         </ThemedText>
 
-        <ThemedTextInput
-          placeholder="Nombre del taller"
-          icon="business-outline"
-          value={form.nombre}
-          onChangeText={(value) => setForm({ ...form, nombre: value })}
-        />
-        <ThemedTextInput
-          placeholder="Descripción"
-          icon="document-text-outline"
-          value={form.descripcion}
-          onChangeText={(value) => setForm({ ...form, descripcion: value })}
-        />
-        <ThemedTextInput
-          placeholder="Dirección"
-          icon="location-outline"
-          value={form.ubicacion}
-          onChangeText={(value) => setForm({ ...form, ubicacion: value })}
-        />
+        <View style={{ marginBottom: 12 }}>
+          <ThemedText style={{ marginBottom: 4, color: "white" }}>
+            Nombre del taller
+          </ThemedText>
+          <ThemedTextInput
+            placeholder="Nombre del taller"
+            icon="business-outline"
+            value={form.nombre}
+            onChangeText={(value) => setForm({ ...form, nombre: value })}
+          />
+        </View>
+
+        <View style={{ marginBottom: 12 }}>
+          <ThemedText style={{ marginBottom: 4, color: "white" }}>
+            Descripción
+          </ThemedText>
+          <ThemedTextInput
+            placeholder="Descripción"
+            icon="document-text-outline"
+            value={form.descripcion}
+            onChangeText={(value) => setForm({ ...form, descripcion: value })}
+          />
+        </View>
+
+        <View style={{ marginBottom: 12 }}>
+          <ThemedText style={{ marginBottom: 4, color: "white" }}>
+            Dirección
+          </ThemedText>
+          <ThemedTextInput
+            placeholder="Dirección"
+            icon="location-outline"
+            value={form.ubicacion}
+            onChangeText={(value) => setForm({ ...form, ubicacion: value })}
+          />
+        </View>
 
         <Button title="Seleccionar imagen" onPress={seleccionarImagen} />
 

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState, useCallback } from "react";
 import {
   View,
   ScrollView,
@@ -15,6 +15,7 @@ import { getBaseImageUrl } from "@/presentation/theme/hooks/getBaseImageUrl";
 
 import CustomSmallButton from "@/presentation/theme/components/CustomSmallButton";
 import { Picker } from "@react-native-picker/picker";
+import { useFocusEffect } from "@react-navigation/native";
 
 export default function ReservarTurnoScreen() {
   const backgroundColor = useThemeColor({}, "background");
@@ -29,28 +30,31 @@ export default function ReservarTurnoScreen() {
   const [turnoId, setTurnoId] = useState<number | undefined>(undefined);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchDatos = async () => {
-      try {
-        const [tallerRes, vehiculoRes, turnosRes] = await Promise.all([
-          fixManagerApi.get(`/talleres/${tallerId}/taller`),
-          fixManagerApi.get(`/vehiculos/usuario/${user?.id}`),
-          fixManagerApi.get(`/turnos/disponibles?tallerId=${tallerId}`),
-        ]);
+  useFocusEffect(
+    useCallback(() => {
+      const fetchDatos = async () => {
+        try {
+          setLoading(true);
+          const [tallerRes, vehiculoRes, turnosRes] = await Promise.all([
+            fixManagerApi.get(`/talleres/${tallerId}/taller`),
+            fixManagerApi.get(`/vehiculos/usuario/${user?.id}`),
+            fixManagerApi.get(`/turnos/disponibles?tallerId=${tallerId}`),
+          ]);
 
-        setTaller(tallerRes.data);
-        setVehiculos(vehiculoRes.data);
-        setTurnos(turnosRes.data);
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      } catch (error) {
-        Alert.alert("Error", "No se pudo cargar la información del taller");
-      } finally {
-        setLoading(false);
-      }
-    };
+          setTaller(tallerRes.data);
+          setVehiculos(vehiculoRes.data);
+          setTurnos(turnosRes.data);
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        } catch (error) {
+          Alert.alert("Error", "No se pudo cargar la información del taller");
+        } finally {
+          setLoading(false);
+        }
+      };
 
-    fetchDatos();
-  }, [tallerId, user?.id]);
+      fetchDatos();
+    }, [tallerId, user?.id])
+  );
 
   const reservarTurno = async () => {
     if (!vehiculoId || !turnoId) {

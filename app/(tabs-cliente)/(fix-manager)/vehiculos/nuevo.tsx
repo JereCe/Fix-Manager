@@ -1,17 +1,18 @@
-import { useState } from "react";
-import { View, Alert } from "react-native";
-import { Stack, router } from "expo-router";
-import { ThemedText } from "@/presentation/theme/components/ThemedText";
 import ThemedButton from "@/presentation/theme/components/ThemedButton";
-import { fixManagerApi } from "@/core/auth/api/fixManagerApi";
-import { useAuthStore } from "@/presentation/auth/store/useAuthStore";
+
+import { ThemedText } from "@/presentation/theme/components/ThemedText";
 import ThemedTextInput from "@/presentation/theme/components/ThemedTextInput";
 import { useThemeColor } from "@/presentation/theme/hooks/useThemeColor";
+import { fixManagerApi } from "@/core/auth/api/fixManagerApi";
+import { router, Stack } from "expo-router";
+import React, { useState } from "react";
+import { Alert, View, TouchableWithoutFeedback, Keyboard } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 const NuevoVehiculoScreen = () => {
-  const { user } = useAuthStore();
   const backgroundColor = useThemeColor({}, "background");
   const inputBG = useThemeColor({}, "textInputBG");
+  const [isPosting, setIsPosting] = useState(false);
 
   const [form, setForm] = useState({
     marca: "",
@@ -21,20 +22,32 @@ const NuevoVehiculoScreen = () => {
   });
 
   const onSave = async () => {
+    const { marca, modelo, patente, anio } = form;
+
+    if (!marca || !modelo || !patente || !anio) {
+      Alert.alert("Error", "Completa todos los campos");
+      return;
+    }
+
+    if (!/^[0-9]{4}$/.test(anio)) {
+      Alert.alert("Error", "El año debe ser un número de 4 dígitos");
+      return;
+    }
+
     try {
+      setIsPosting(true);
       await fixManagerApi.post("/vehiculos/crear", {
         ...form,
-        anio: Number(form.anio),
-        usuarioId: user?.id,
+        anio: Number(anio),
       });
 
       Alert.alert("Éxito", "Vehículo creado correctamente");
-
-      setForm({ marca: "", modelo: "", patente: "", anio: "" });
       router.replace("/(tabs-cliente)/(fix-manager)/vehiculos");
     } catch (error) {
       console.log("Error guardando:", error);
       Alert.alert("Error", "No se pudo guardar el vehículo");
+    } finally {
+      setIsPosting(false);
     }
   };
 
@@ -43,14 +56,20 @@ const NuevoVehiculoScreen = () => {
   };
 
   return (
-    <>
-      <Stack.Screen options={{ title: "Nuevo Vehículo" }} />
-      <View style={{ padding: 20, backgroundColor, flex: 1 }}>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <KeyboardAwareScrollView
+        style={{ flex: 1, backgroundColor }}
+        contentContainerStyle={{ padding: 20 }}
+        enableOnAndroid
+        keyboardShouldPersistTaps="handled"
+      >
+        <Stack.Screen options={{ title: "Nuevo Vehículo" }} />
+
         <View
           style={{
             backgroundColor: inputBG,
             borderRadius: 12,
-            padding: 12,
+            padding: 16,
             marginBottom: 20,
             paddingBottom: 24,
           }}
@@ -104,13 +123,15 @@ const NuevoVehiculoScreen = () => {
             />
           </View>
 
-          <ThemedButton onPress={onSave}>Crear Vehículo</ThemedButton>
+          <ThemedButton onPress={onSave} disabled={isPosting}>
+            Crear Vehículo
+          </ThemedButton>
           <View style={{ marginTop: 10 }}>
             <ThemedButton onPress={onCancel}>Cancelar</ThemedButton>
           </View>
         </View>
-      </View>
-    </>
+      </KeyboardAwareScrollView>
+    </TouchableWithoutFeedback>
   );
 };
 

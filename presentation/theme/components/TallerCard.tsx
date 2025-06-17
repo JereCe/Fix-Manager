@@ -93,9 +93,9 @@ export const TallerCard = ({
         <TouchableOpacity onPress={toggleFavorito}>
           <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
             <Ionicons
-              name={esFavorito ? "star" : "star-outline"}
+              name={esFavorito ? "heart" : "heart-outline"}
               size={20}
-              color={esFavorito ? "yellow" : "white"}
+              color={esFavorito ? "red" : "white"}
             />
           </Animated.View>
         </TouchableOpacity>
