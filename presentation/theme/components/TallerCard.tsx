@@ -102,7 +102,9 @@ export const TallerCard = ({
       </View>
 
       <Text style={styles.descripcion}>{taller.descripcion}</Text>
-      <Text style={styles.ubicacion}>📍 {taller.ubicacion}</Text>
+      <Text style={styles.ubicacion}>
+        📍 {taller.ubicacion} {taller.ciudad ? ` - ${taller.ciudad}` : ""}
+      </Text>
 
       <Pressable
         onPress={() =>

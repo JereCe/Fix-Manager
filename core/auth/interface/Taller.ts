@@ -6,6 +6,7 @@ export interface Taller {
   imagenLogo: string;
   promedioCalificacion: number;
   cantidadCalificaciones: number;
+  ciudad: string;
   // Podés agregar un tipo para agenda si lo necesitás más adelante
   // agenda?: Agenda;
 }

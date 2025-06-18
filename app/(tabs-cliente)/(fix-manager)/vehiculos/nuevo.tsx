@@ -1,5 +1,4 @@
 import ThemedButton from "@/presentation/theme/components/ThemedButton";
-
 import { ThemedText } from "@/presentation/theme/components/ThemedText";
 import ThemedTextInput from "@/presentation/theme/components/ThemedTextInput";
 import { useThemeColor } from "@/presentation/theme/hooks/useThemeColor";
@@ -8,11 +7,13 @@ import { router, Stack } from "expo-router";
 import React, { useState } from "react";
 import { Alert, View, TouchableWithoutFeedback, Keyboard } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { useAuthStore } from "@/presentation/auth/store/useAuthStore";
 
 const NuevoVehiculoScreen = () => {
   const backgroundColor = useThemeColor({}, "background");
   const inputBG = useThemeColor({}, "textInputBG");
   const [isPosting, setIsPosting] = useState(false);
+  const { user } = useAuthStore();
 
   const [form, setForm] = useState({
     marca: "",
@@ -39,6 +40,7 @@ const NuevoVehiculoScreen = () => {
       await fixManagerApi.post("/vehiculos/crear", {
         ...form,
         anio: Number(anio),
+        usuarioId: user?.id, // ✅ ID necesario para relacionar el vehículo
       });
 
       Alert.alert("Éxito", "Vehículo creado correctamente");
@@ -126,6 +128,7 @@ const NuevoVehiculoScreen = () => {
           <ThemedButton onPress={onSave} disabled={isPosting}>
             Crear Vehículo
           </ThemedButton>
+
           <View style={{ marginTop: 10 }}>
             <ThemedButton onPress={onCancel}>Cancelar</ThemedButton>
           </View>

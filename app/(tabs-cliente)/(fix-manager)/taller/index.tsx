@@ -131,7 +131,12 @@ export default function TallerScreen() {
                 )
               }
             />
-            <CustomButton label="Mis servicios" onPress={() => {}} />
+            <CustomButton
+              label="Mis servicios"
+              onPress={() =>
+                router.push("/(tabs-cliente)/(fix-manager)/taller/misServicios")
+              }
+            />
           </View>
         </View>
       </ScrollView>

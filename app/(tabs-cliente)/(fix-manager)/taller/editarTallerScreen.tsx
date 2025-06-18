@@ -1,12 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-  View,
-  Alert,
-  Image,
-  Button,
-  ScrollView,
-  ActivityIndicator,
-} from "react-native";
+import { View, Alert, Image, Button, ActivityIndicator } from "react-native";
 import { Stack, router } from "expo-router";
 import { ThemedText } from "@/presentation/theme/components/ThemedText";
 import ThemedButton from "@/presentation/theme/components/ThemedButton";
@@ -15,6 +8,7 @@ import { useAuthStore } from "@/presentation/auth/store/useAuthStore";
 import ThemedTextInput from "@/presentation/theme/components/ThemedTextInput";
 import { useThemeColor } from "@/presentation/theme/hooks/useThemeColor";
 import * as ImagePicker from "expo-image-picker";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 export default function EditarTallerScreen() {
   const backgroundColor = useThemeColor({}, "background");
@@ -25,6 +19,7 @@ export default function EditarTallerScreen() {
     nombre: "",
     descripcion: "",
     ubicacion: "",
+    ciudad: "",
   });
 
   const [imagen, setImagen] = useState<null | {
@@ -44,6 +39,7 @@ export default function EditarTallerScreen() {
           nombre: data.nombre || "",
           descripcion: data.descripcion || "",
           ubicacion: data.ubicacion || "",
+          ciudad: data.ciudad || "",
         });
       } catch (error) {
         console.log("Error al cargar taller", error);
@@ -81,6 +77,7 @@ export default function EditarTallerScreen() {
     formData.append("nombre", form.nombre);
     formData.append("descripcion", form.descripcion);
     formData.append("ubicacion", form.ubicacion);
+    formData.append("ciudad", form.ciudad);
 
     if (imagen) {
       formData.append("imagen", {
@@ -120,7 +117,11 @@ export default function EditarTallerScreen() {
   }
 
   return (
-    <ScrollView style={{ flex: 1, padding: 20, backgroundColor }}>
+    <KeyboardAwareScrollView
+      style={{ flex: 1, padding: 20, backgroundColor }}
+      extraScrollHeight={60}
+      enableOnAndroid
+    >
       <Stack.Screen options={{ title: "Editar Taller" }} />
       <View
         style={{
@@ -137,24 +138,53 @@ export default function EditarTallerScreen() {
           Editar taller
         </ThemedText>
 
-        <ThemedTextInput
-          placeholder="Nombre del taller"
-          icon="business-outline"
-          value={form.nombre}
-          onChangeText={(value) => setForm({ ...form, nombre: value })}
-        />
-        <ThemedTextInput
-          placeholder="Descripción"
-          icon="document-text-outline"
-          value={form.descripcion}
-          onChangeText={(value) => setForm({ ...form, descripcion: value })}
-        />
-        <ThemedTextInput
-          placeholder="Dirección"
-          icon="location-outline"
-          value={form.ubicacion}
-          onChangeText={(value) => setForm({ ...form, ubicacion: value })}
-        />
+        <View style={{ marginBottom: 12 }}>
+          <ThemedText style={{ marginBottom: 4, color: "white" }}>
+            Nombre del taller
+          </ThemedText>
+          <ThemedTextInput
+            placeholder="Nombre del taller"
+            icon="business-outline"
+            value={form.nombre}
+            onChangeText={(value) => setForm({ ...form, nombre: value })}
+          />
+        </View>
+
+        <View style={{ marginBottom: 12 }}>
+          <ThemedText style={{ marginBottom: 4, color: "white" }}>
+            Descripción
+          </ThemedText>
+          <ThemedTextInput
+            placeholder="Descripción"
+            icon="document-text-outline"
+            value={form.descripcion}
+            onChangeText={(value) => setForm({ ...form, descripcion: value })}
+          />
+        </View>
+
+        <View style={{ marginBottom: 12 }}>
+          <ThemedText style={{ marginBottom: 4, color: "white" }}>
+            Dirección
+          </ThemedText>
+          <ThemedTextInput
+            placeholder="Dirección"
+            icon="location-outline"
+            value={form.ubicacion}
+            onChangeText={(value) => setForm({ ...form, ubicacion: value })}
+          />
+        </View>
+
+        <View style={{ marginBottom: 12 }}>
+          <ThemedText style={{ marginBottom: 4, color: "white" }}>
+            Ciudad
+          </ThemedText>
+          <ThemedTextInput
+            placeholder="Ciudad"
+            icon="map-outline"
+            value={form.ciudad}
+            onChangeText={(value) => setForm({ ...form, ciudad: value })}
+          />
+        </View>
 
         <Button title="Seleccionar imagen" onPress={seleccionarImagen} />
 
@@ -174,6 +204,6 @@ export default function EditarTallerScreen() {
           <ThemedButton onPress={actualizarTaller}>Guardar</ThemedButton>
         </View>
       </View>
-    </ScrollView>
+    </KeyboardAwareScrollView>
   );
 }

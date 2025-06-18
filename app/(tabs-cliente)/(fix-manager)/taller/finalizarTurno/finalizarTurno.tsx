@@ -4,19 +4,20 @@ import {
   Alert,
   Image,
   ScrollView,
-  TextInput,
-  Button,
-  Text,
   StyleSheet,
+  Pressable,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { fixManagerApi } from "@/core/auth/api/fixManagerApi";
 import { useThemeColor } from "@/presentation/theme/hooks/useThemeColor";
 import { Stack, router, useLocalSearchParams } from "expo-router";
 import { ThemedText } from "@/presentation/theme/components/ThemedText";
+import ThemedButton from "@/presentation/theme/components/ThemedButton";
+import ThemedTextInput from "@/presentation/theme/components/ThemedTextInput";
 
 export default function FinalizarTurnoScreen() {
   const backgroundColor = useThemeColor({}, "background");
+  const cardBackground = useThemeColor({}, "cardBackground");
   const { id, fecha, hora, vehiculo } = useLocalSearchParams();
 
   const [descripcionTrabajo, setDescripcionTrabajo] = useState("");
@@ -76,42 +77,55 @@ export default function FinalizarTurnoScreen() {
     <ScrollView style={{ flex: 1, padding: 16, backgroundColor }}>
       <Stack.Screen options={{ title: "Finalizar Turno" }} />
 
-      <View style={styles.card}>
+      <View style={[styles.card, { backgroundColor: cardBackground }]}>
         <ThemedText style={styles.label}>Vehículo</ThemedText>
-        <Text style={styles.value}>{vehiculo}</Text>
+        <ThemedText style={styles.value}>{vehiculo}</ThemedText>
 
         <ThemedText style={styles.label}>Fecha</ThemedText>
-        <Text style={styles.value}>{fecha}</Text>
+        <ThemedText style={styles.value}>{fecha}</ThemedText>
 
         <ThemedText style={styles.label}>Hora</ThemedText>
-        <Text style={styles.value}>{hora}</Text>
+        <ThemedText style={styles.value}>{hora}</ThemedText>
 
         <ThemedText style={styles.label}>Descripción del trabajo</ThemedText>
-        <TextInput
+        <ThemedTextInput
+          placeholder="Detalle del trabajo realizado"
           multiline
           numberOfLines={4}
-          style={styles.input}
-          placeholder="Detalle del trabajo realizado"
           value={descripcionTrabajo}
           onChangeText={setDescripcionTrabajo}
         />
 
-        <Button title="Agregar Imágenes" onPress={seleccionarImagen} />
-        <View style={{ marginVertical: 10 }}>
-          {imagenes.map((img, i) => (
-            <Image
-              key={i}
-              source={{ uri: img.uri }}
-              style={{ width: 100, height: 100, marginVertical: 4 }}
-            />
-          ))}
-        </View>
+        <ThemedButton onPress={seleccionarImagen}>
+          Agregar Imágenes
+        </ThemedButton>
 
-        <Button
-          title={subiendo ? "Finalizando..." : "Finalizar Turno"}
-          onPress={finalizarTurno}
-          disabled={subiendo}
-        />
+        {imagenes.length > 0 && (
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={{ marginTop: 10, gap: 10 }}
+          >
+            {imagenes.map((img, i) => (
+              <Pressable key={i}>
+                <Image
+                  source={{ uri: img.uri }}
+                  style={{
+                    width: 100,
+                    height: 100,
+                    borderRadius: 10,
+                  }}
+                />
+              </Pressable>
+            ))}
+          </ScrollView>
+        )}
+
+        <View style={{ marginTop: 20 }}>
+          <ThemedButton onPress={finalizarTurno} disabled={subiendo}>
+            {subiendo ? "Finalizando..." : "Finalizar Turno"}
+          </ThemedButton>
+        </View>
       </View>
     </ScrollView>
   );
@@ -119,7 +133,6 @@ export default function FinalizarTurnoScreen() {
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: "#1F2E3C",
     padding: 16,
     borderRadius: 12,
   },
@@ -131,11 +144,5 @@ const styles = StyleSheet.create({
   value: {
     color: "white",
     marginBottom: 8,
-  },
-  input: {
-    backgroundColor: "white",
-    borderRadius: 8,
-    padding: 10,
-    marginVertical: 10,
   },
 });

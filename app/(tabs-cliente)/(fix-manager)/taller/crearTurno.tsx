@@ -6,10 +6,11 @@ import { fixManagerApi } from "@/core/auth/api/fixManagerApi";
 import { useAuthStore } from "@/presentation/auth/store/useAuthStore";
 import { ThemedText } from "@/presentation/theme/components/ThemedText";
 import { useThemeColor } from "@/presentation/theme/hooks/useThemeColor";
-import CustomSmallButton from "@/presentation/theme/components/CustomSmallButton";
+import CustomWideButton from "@/presentation/theme/components/CustomWideButton";
 
 const CrearTurnoTallerScreen = () => {
   const backgroundColor = useThemeColor({}, "background");
+  const cardBackground = useThemeColor({}, "cardBackground");
 
   const { user } = useAuthStore();
 
@@ -56,59 +57,64 @@ const CrearTurnoTallerScreen = () => {
   };
 
   return (
-    <View
-      style={{
-        flex: 1,
-        backgroundColor,
-        padding: 20,
-        paddingTop: 20,
-      }}
-    >
+    <View style={{ flex: 1, backgroundColor, padding: 20 }}>
       <Stack.Screen options={{ title: "Crear Turno" }} />
 
-      <ThemedText
-        style={{ color: "white", textAlign: "center", marginBottom: 4 }}
+      <View
+        style={{
+          backgroundColor: cardBackground,
+          padding: 20,
+          borderRadius: 16,
+        }}
       >
-        Seleccione fecha
-      </ThemedText>
-      <View style={{ alignItems: "center", marginBottom: 20 }}>
-        <CustomSmallButton onPress={() => setMostrarFecha(true)}>
-          Fecha
-        </CustomSmallButton>
-      </View>
-
-      <ThemedText
-        style={{ color: "white", textAlign: "center", marginBottom: 4 }}
-      >
-        Seleccione hora
-      </ThemedText>
-      <View style={{ alignItems: "center", marginBottom: 20 }}>
-        <CustomSmallButton onPress={() => setMostrarHora(true)}>
-          Hora
-        </CustomSmallButton>
-      </View>
-
-      {fechaSeleccionada && (
-        <ThemedText
-          style={{ marginVertical: 10, color: "white", textAlign: "center" }}
-        >
-          Fecha seleccionada: {fecha.toLocaleDateString()}
+        <ThemedText style={{ color: "white", marginBottom: 10 }}>
+          Seleccione fecha
         </ThemedText>
-      )}
-      {horaSeleccionada && (
-        <ThemedText
-          style={{ marginBottom: 40, color: "white", textAlign: "center" }}
-        >
-          Hora seleccionada:{" "}
-          {fecha.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
-        </ThemedText>
-      )}
+        <CustomWideButton onPress={() => setMostrarFecha(true)}>
+          Seleccionar fecha
+        </CustomWideButton>
 
-      <View style={{ flexDirection: "row", justifyContent: "center", gap: 12 }}>
-        <CustomSmallButton onPress={crearTurno}>Crear Turno</CustomSmallButton>
-        <CustomSmallButton onPress={() => router.back()}>
-          Cancelar
-        </CustomSmallButton>
+        <View style={{ height: 20 }} />
+
+        <ThemedText style={{ color: "white", marginBottom: 10 }}>
+          Seleccione hora
+        </ThemedText>
+        <CustomWideButton onPress={() => setMostrarHora(true)}>
+          Seleccionar hora
+        </CustomWideButton>
+
+        {fechaSeleccionada && (
+          <ThemedText
+            style={{ marginTop: 20, color: "white", textAlign: "center" }}
+          >
+            Fecha: {fecha.toLocaleDateString()}
+          </ThemedText>
+        )}
+        {horaSeleccionada && (
+          <ThemedText
+            style={{ marginBottom: 20, color: "white", textAlign: "center" }}
+          >
+            Hora:{" "}
+            {fecha.toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+            })}
+          </ThemedText>
+        )}
+
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            marginTop: 20,
+            paddingHorizontal: 10,
+          }}
+        >
+          <CustomWideButton onPress={() => router.back()}>
+            Cancelar
+          </CustomWideButton>
+          <CustomWideButton onPress={crearTurno}>Crear Turno</CustomWideButton>
+        </View>
       </View>
 
       {mostrarFecha && (

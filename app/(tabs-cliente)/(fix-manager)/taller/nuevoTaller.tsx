@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { View, Alert, Image, Button, ScrollView } from "react-native";
+import { View, Alert, Image, Button } from "react-native";
 import { Stack, router } from "expo-router";
 import { ThemedText } from "@/presentation/theme/components/ThemedText";
 import ThemedButton from "@/presentation/theme/components/ThemedButton";
@@ -8,6 +8,7 @@ import { useAuthStore } from "@/presentation/auth/store/useAuthStore";
 import ThemedTextInput from "@/presentation/theme/components/ThemedTextInput";
 import { useThemeColor } from "@/presentation/theme/hooks/useThemeColor";
 import * as ImagePicker from "expo-image-picker";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 export default function NuevoTallerScreen() {
   const backgroundColor = useThemeColor({}, "background");
@@ -17,6 +18,7 @@ export default function NuevoTallerScreen() {
     nombre: "",
     descripcion: "",
     ubicacion: "",
+    ciudad: "",
   });
 
   const [imagen, setImagen] = useState<null | {
@@ -46,10 +48,9 @@ export default function NuevoTallerScreen() {
   };
 
   const guardarTaller = async () => {
-    const { nombre, descripcion, ubicacion } = form;
+    const { nombre, descripcion, ubicacion, ciudad } = form;
 
-    // Validaciones
-    if (!nombre || !descripcion || !ubicacion) {
+    if (!nombre || !descripcion || !ubicacion || !ciudad) {
       Alert.alert("Error", "Por favor completa todos los campos");
       return;
     }
@@ -63,7 +64,7 @@ export default function NuevoTallerScreen() {
     formData.append("nombre", nombre);
     formData.append("descripcion", descripcion);
     formData.append("ubicacion", ubicacion);
-
+    formData.append("ciudad", ciudad);
     formData.append("imagen", {
       uri: imagen.uri,
       name: imagen.name,
@@ -86,7 +87,11 @@ export default function NuevoTallerScreen() {
   };
 
   return (
-    <ScrollView style={{ flex: 1, padding: 20, backgroundColor }}>
+    <KeyboardAwareScrollView
+      style={{ flex: 1, padding: 20, backgroundColor }}
+      extraScrollHeight={60}
+      enableOnAndroid
+    >
       <Stack.Screen options={{ title: "Crear Taller" }} />
       <View
         style={{
@@ -139,6 +144,18 @@ export default function NuevoTallerScreen() {
           />
         </View>
 
+        <View style={{ marginBottom: 12 }}>
+          <ThemedText style={{ marginBottom: 4, color: "white" }}>
+            Ciudad
+          </ThemedText>
+          <ThemedTextInput
+            placeholder="Ciudad"
+            icon="location-outline"
+            value={form.ciudad}
+            onChangeText={(value) => setForm({ ...form, ciudad: value })}
+          />
+        </View>
+
         <Button title="Seleccionar imagen" onPress={seleccionarImagen} />
 
         {imagen && (
@@ -157,6 +174,6 @@ export default function NuevoTallerScreen() {
           <ThemedButton onPress={guardarTaller}>Guardar</ThemedButton>
         </View>
       </View>
-    </ScrollView>
+    </KeyboardAwareScrollView>
   );
 }
