@@ -5,8 +5,9 @@ import {
   ActivityIndicator,
   Text,
   StyleSheet,
+  Alert,
 } from "react-native";
-import { Stack } from "expo-router";
+import { Stack, router } from "expo-router";
 import { fixManagerApi } from "@/core/auth/api/fixManagerApi";
 import { useAuthStore } from "@/presentation/auth/store/useAuthStore";
 import { useThemeColor } from "@/presentation/theme/hooks/useThemeColor";
@@ -51,6 +52,13 @@ export default function TurnosHoyYManianaScreen() {
 
         const turnosDeHoy = data.filter((t: any) => t.fecha === hoyStr);
         const turnosDeManiana = data.filter((t: any) => t.fecha === manianaStr);
+
+        if (turnosDeHoy.length === 0 && turnosDeManiana.length === 0) {
+          Alert.alert("Sin turnos", "No hay turnos para hoy ni para mañana.", [
+            { text: "Aceptar", onPress: () => router.back() },
+          ]);
+          return;
+        }
 
         const ordenar = (arr: any[]) =>
           arr.sort((a, b) => {

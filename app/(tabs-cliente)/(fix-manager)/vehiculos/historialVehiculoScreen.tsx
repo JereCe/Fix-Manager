@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { View, FlatList, ActivityIndicator, Text } from "react-native";
-import { Stack, useLocalSearchParams } from "expo-router";
+import { View, FlatList, ActivityIndicator, Alert } from "react-native";
+import { Stack, useLocalSearchParams, router } from "expo-router";
 import { fixManagerApi } from "@/core/auth/api/fixManagerApi";
 import { useThemeColor } from "@/presentation/theme/hooks/useThemeColor";
 import { HistorialTurnoCard } from "@/presentation/theme/components/HistorialTurnoCard";
@@ -26,6 +26,15 @@ export default function HistorialVehiculoScreen() {
         const { data } = await fixManagerApi.get(
           `/turnos/vehiculo/${id}/historial`
         );
+
+        if (!data || data.length === 0) {
+          Alert.alert(
+            "Sin historial",
+            "Este vehículo no tiene historial de turnos.",
+            [{ text: "Aceptar", onPress: () => router.back() }]
+          );
+          return;
+        }
 
         const historialOrdenado = data.sort((a: any, b: any) => {
           const fechaHoraA = new Date(`${a.fecha}T${a.hora}`);
@@ -63,17 +72,11 @@ export default function HistorialVehiculoScreen() {
     <View style={{ flex: 1, padding: 16, backgroundColor }}>
       <Stack.Screen options={{ title: "Historial del Vehículo" }} />
 
-      {historial.length === 0 ? (
-        <Text style={{ color: "white", textAlign: "center", marginTop: 20 }}>
-          Este vehículo no tiene historial de turnos.
-        </Text>
-      ) : (
-        <FlatList
-          data={historial}
-          keyExtractor={(item) => item.id.toString()}
-          renderItem={({ item }) => <HistorialTurnoCard {...item} />}
-        />
-      )}
+      <FlatList
+        data={historial}
+        keyExtractor={(item) => item.id.toString()}
+        renderItem={({ item }) => <HistorialTurnoCard {...item} />}
+      />
     </View>
   );
 }

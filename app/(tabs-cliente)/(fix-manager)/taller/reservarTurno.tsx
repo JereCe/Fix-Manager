@@ -35,15 +35,32 @@ export default function ReservarTurnoScreen() {
       const fetchDatos = async () => {
         try {
           setLoading(true);
+
           const [tallerRes, vehiculoRes, turnosRes] = await Promise.all([
-            fixManagerApi.get(`/talleres/${tallerId}/taller`),
+            fixManagerApi.get(`/talleres/get/${tallerId}`),
             fixManagerApi.get(`/vehiculos/usuario/${user?.id}`),
             fixManagerApi.get(`/turnos/disponibles?tallerId=${tallerId}`),
           ]);
 
+          const turnosDisponibles = turnosRes.data;
+
+          if (!turnosDisponibles || turnosDisponibles.length === 0) {
+            Alert.alert(
+              "Sin turnos",
+              "Este taller no tiene turnos disponibles en este momento.",
+              [
+                {
+                  text: "Aceptar",
+                  onPress: () => router.back(),
+                },
+              ]
+            );
+            return;
+          }
+
           setTaller(tallerRes.data);
           setVehiculos(vehiculoRes.data);
-          setTurnos(turnosRes.data);
+          setTurnos(turnosDisponibles);
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (error) {
           Alert.alert("Error", "No se pudo cargar la información del taller");

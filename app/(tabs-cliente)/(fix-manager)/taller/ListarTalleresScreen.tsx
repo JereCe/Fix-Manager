@@ -9,14 +9,16 @@ import {
   LayoutAnimation,
   Platform,
   UIManager,
+  Alert,
 } from "react-native";
 import { fixManagerApi } from "@/core/auth/api/fixManagerApi";
-import { Stack, useFocusEffect } from "expo-router";
+import { Stack, useFocusEffect, router } from "expo-router";
 import { TallerCard } from "@/presentation/theme/components/TallerCard";
 import { getBaseImageUrl } from "@/presentation/theme/hooks/getBaseImageUrl";
 import { Taller } from "@/core/auth/interface/Taller";
 import { useThemeColor } from "@/presentation/theme/hooks/useThemeColor";
 import { Picker } from "@react-native-picker/picker";
+import { useAuthStore } from "@/presentation/auth/store/useAuthStore";
 
 const tiposReparacion = [
   "MECANICA_GENERAL",
@@ -31,6 +33,7 @@ if (Platform.OS === "android") {
 }
 
 export default function ListarTalleresScreen() {
+  const { user } = useAuthStore();
   const [talleres, setTalleres] = useState<Taller[]>([]);
   const [loading, setLoading] = useState(true);
   const [orden, setOrden] = useState("nombre");
@@ -67,7 +70,37 @@ export default function ListarTalleresScreen() {
 
   useFocusEffect(
     useCallback(() => {
-      fetchTalleres();
+      const verificarVehiculos = async () => {
+        setLoading(true);
+        try {
+          const { data } = await fixManagerApi.get(
+            `/vehiculos/usuario/${user?.id}`
+          );
+          if (!data || data.length === 0) {
+            Alert.alert(
+              "Sin vehículos",
+              "No tenés vehículos registrados. ¿Querés agregarlos ahora?",
+              [
+                {
+                  text: "Cancelar",
+                  style: "cancel",
+                  onPress: () => router.back(),
+                },
+                {
+                  text: "Agregar vehículo",
+                  onPress: () => router.push("/vehiculos/nuevo"),
+                },
+              ]
+            );
+          } else {
+            fetchTalleres();
+          }
+        } catch (e) {
+          console.error("Error al verificar vehículos:", e);
+        }
+      };
+
+      verificarVehiculos();
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [ciudad, tipo])
   );
@@ -102,7 +135,7 @@ export default function ListarTalleresScreen() {
           backgroundColor: backgroundColor,
         }}
       >
-        <ActivityIndicator size="large" color="#5CC6FF " />
+        <ActivityIndicator size="large" color="#5CC6FF" />
       </View>
     );
   }
