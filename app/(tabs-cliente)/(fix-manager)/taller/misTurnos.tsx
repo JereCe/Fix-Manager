@@ -10,6 +10,7 @@ interface TurnoReservado {
   id: number;
   fecha: string;
   hora: string;
+  estado: string;
   taller: {
     nombre: string;
     ubicacion: string;
@@ -39,7 +40,7 @@ export default function MisTurnosScreen() {
             [
               {
                 text: "Aceptar",
-                onPress: () => router.back(), // O podés dejarlo sin volver atrás
+                onPress: () => router.back(),
               },
             ]
           );
@@ -47,20 +48,33 @@ export default function MisTurnosScreen() {
           return;
         }
 
-        const turnosAdaptados: TurnoReservado[] = data.map((t: any) => ({
-          id: t.id,
-          fecha: t.fecha,
-          hora: t.hora,
-          taller: {
-            nombre: t.tallerNombre,
-            ubicacion: t.tallerUbicacion,
-          },
-          vehiculo: {
-            marca: t.vehiculoMarca,
-            modelo: t.vehiculoModelo,
-            patente: t.vehiculoPatente,
-          },
-        }));
+        const hoy = new Date();
+        hoy.setHours(0, 0, 0, 0); // Para comparar solo fechas, sin hora
+
+        const turnosAdaptados: TurnoReservado[] = data
+          .filter((t: any) => {
+            if (t.estado === "FINALIZADO") return false;
+
+            const turnoFecha = new Date(t.fecha);
+            turnoFecha.setHours(0, 0, 0, 0); // Igualar formato
+
+            return turnoFecha >= hoy; // Mostrar solo desde hoy en adelante
+          })
+          .map((t: any) => ({
+            id: t.id,
+            fecha: t.fecha,
+            hora: t.hora,
+            estado: t.estado,
+            taller: {
+              nombre: t.tallerNombre,
+              ubicacion: t.tallerUbicacion,
+            },
+            vehiculo: {
+              marca: t.vehiculoMarca,
+              modelo: t.vehiculoModelo,
+              patente: t.vehiculoPatente,
+            },
+          }));
 
         turnosAdaptados.sort((a, b) => {
           const fechaHoraA = new Date(`${a.fecha}T${a.hora}`);

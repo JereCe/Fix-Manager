@@ -37,7 +37,7 @@ export default function FinalizarTurnoScreen() {
   };
 
   const finalizarTurno = async () => {
-    if (!descripcionTrabajo) {
+    if (!descripcionTrabajo.trim()) {
       Alert.alert(
         "Descripción requerida",
         "Por favor completa la descripción del trabajo."
@@ -48,13 +48,15 @@ export default function FinalizarTurnoScreen() {
     const formData = new FormData();
     formData.append("descripcionTrabajo", descripcionTrabajo);
 
-    imagenes.forEach((img, index) => {
-      formData.append("imagenes", {
-        uri: img.uri,
-        name: `foto_${index}.jpg`,
-        type: "image/jpeg",
-      } as any);
-    });
+    if (imagenes.length > 0) {
+      imagenes.forEach((img, index) => {
+        formData.append("imagenes", {
+          uri: img.uri,
+          name: `foto_${index}.jpg`,
+          type: "image/jpeg",
+        } as any);
+      });
+    }
 
     try {
       setSubiendo(true);

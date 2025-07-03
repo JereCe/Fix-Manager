@@ -67,6 +67,9 @@ export default function TallerScreen() {
     );
   }
 
+  const imageUrl = `${getBaseImageUrl()}${taller.imagenLogo}`;
+  console.log("URL de la imagen del taller:", imageUrl);
+
   return (
     <>
       <Stack.Screen options={{ title: "Mi Taller" }} />
@@ -84,9 +87,7 @@ export default function TallerScreen() {
           </ThemedText>
 
           <Image
-            source={{
-              uri: `${getBaseImageUrl()}${taller.imagenLogo}`,
-            }}
+            source={{ uri: imageUrl }}
             style={{ width: 200, height: 100 }}
           />
 

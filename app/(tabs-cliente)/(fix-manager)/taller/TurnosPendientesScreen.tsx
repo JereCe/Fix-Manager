@@ -30,13 +30,20 @@ export default function TurnosPendientesTallerScreen() {
           `/turnos/taller/${user?.id}/pendientes`
         );
 
-        const turnosOrdenados = data.sort((a: any, b: any) => {
-          const fechaHoraA = new Date(`${a.fecha}T${a.hora}`);
-          const fechaHoraB = new Date(`${b.fecha}T${b.hora}`);
-          return fechaHoraA.getTime() - fechaHoraB.getTime();
-        });
+        console.log("Respuesta turnos pendientes:", data);
 
-        setTurnos(turnosOrdenados);
+        if (Array.isArray(data)) {
+          const turnosOrdenados = data.sort((a: any, b: any) => {
+            const fechaHoraA = new Date(`${a.fecha}T${a.hora}`);
+            const fechaHoraB = new Date(`${b.fecha}T${b.hora}`);
+            return fechaHoraA.getTime() - fechaHoraB.getTime();
+          });
+
+          setTurnos(turnosOrdenados);
+        } else {
+          console.error("La respuesta del backend no es un array:", data);
+          setTurnos([]);
+        }
       } catch (error) {
         console.error("Error al obtener turnos pendientes:", error);
       } finally {
